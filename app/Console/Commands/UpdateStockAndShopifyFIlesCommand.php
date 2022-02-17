@@ -72,11 +72,11 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
         if (!$activeJob) {
 
-            Log::emergency(now()->toDateTimeString() . ' started updated JOB now for all the things...!New feb2022');
+            Log::emergency(now()->toDateTimeString() . ' started updated JOB now for all the things...!New 18-feb-2022');
 
             $this->createStockShopifyOutPutExcelFile();
 
-            Log::emergency(now()->toDateTimeString() . ' Finish updated JOB now for all the things...!New feb2022');
+            Log::emergency(now()->toDateTimeString() . ' Finish updated JOB now for all the things...!New 18-feb-2022');
 
             SyncJob::truncate();
 
