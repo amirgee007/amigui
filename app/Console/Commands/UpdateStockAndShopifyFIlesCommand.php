@@ -438,7 +438,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
                 'V_Inventory_Tracker' => 'shopify',
                 'V_Inventory_Qty' => $singleRow['cantidad_stock'], #done
                 'V_Inventory_Policy' => 'deny',
-                'V_Price' => round($priceWithTax, 4),
+                'V_Price' => round($priceWithTax, 2),
                 'V_Requires_Shipping' => true,
                 'V_Taxable' => true,
                 'imagen_Calc' => implode(';', $images)
