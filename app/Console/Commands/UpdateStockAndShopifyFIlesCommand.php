@@ -72,11 +72,11 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
         if (!$activeJob) {
 
-            Log::emergency(now()->toDateTimeString() . ' started updated JOB now for all the things...!New 18-feb-2022');
+            Log::emergency(now()->toDateTimeString() . ' started updated JOB now for all the things...!New 19-feb-2022');
 
             $this->createStockShopifyOutPutExcelFile();
 
-            Log::emergency(now()->toDateTimeString() . ' Finish updated JOB now for all the things...!New 18-feb-2022');
+            Log::emergency(now()->toDateTimeString() . ' Finish updated JOB now for all the things...!New 19-feb-2022');
 
             SyncJob::truncate();
 
@@ -419,6 +419,8 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             $finalTags = str_replace("sin Marca", "-", $finalTags);
             $finalTags = str_replace("Sin Marca", "-", $finalTags);
 
+            Log::info($singleRow['codigo']. ' SKU its price NO '.$priceWithTax);
+
             return [
 
                 'Handle' => $singleRow['codigo'], #done
@@ -438,7 +440,8 @@ class UpdateStockAndShopifyFIlesCommand extends Command
                 'V_Inventory_Tracker' => 'shopify',
                 'V_Inventory_Qty' => $singleRow['cantidad_stock'], #done
                 'V_Inventory_Policy' => 'deny',
-                'V_Price' => round($priceWithTax, 2),
+                'V_Price' => number_format( $priceWithTax, 2, ',', '' ),
+//                'V_Price' => round($priceWithTax, 2),
                 'V_Requires_Shipping' => true,
                 'V_Taxable' => true,
                 'imagen_Calc' => implode(';', $images)
