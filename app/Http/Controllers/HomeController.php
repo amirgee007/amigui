@@ -43,6 +43,10 @@ class HomeController extends Controller
 
             ini_set('max_execution_time', 18000);
 
+            ini_set('max_execution_time', 300000); //300 seconds = 5 minutes
+            ini_set('max_memory_limit', -1); //300 seconds = 5 minutes
+            ini_set('memory_limit', '4096M');
+
             $v = Validator::make($request->all(), [
                 'images_zip' => 'required|mimes:zip',
                 'sku_file' => 'required|mimes:xlsx',
@@ -54,6 +58,8 @@ class HomeController extends Controller
             else
             {
                 $sku_file = 'public/backups/sku_file.xlsx';
+
+                Log::emergency('renameFilesSku Started and file saved public/backups/sku_file.xlsx');
 
                 Storage::put($sku_file, file_get_contents($request->file('sku_file')->getRealPath()));
 
@@ -76,6 +82,8 @@ class HomeController extends Controller
                 $file->cleanDirectory('files/imageOriginal');
                 $file->cleanDirectory('files/imageRenamed');
 
+                Log::emergency('renameFilesSku Started and directory created NOW');
+
                 $zip = new \ZipArchive();
                 $file = $request->file('images_zip');
 
@@ -93,6 +101,9 @@ class HomeController extends Controller
                 $files = File::allFiles($path);
 
                 $pathNew = public_path('files/imageRenamed');
+
+                Log::emergency('renameFilesSku Started and imageRenamed NOW');
+
 
                 File::makeDirectory($path, $mode = 0777, true, true);
                 File::makeDirectory($pathNew, $mode = 0777, true, true);
@@ -117,6 +128,8 @@ class HomeController extends Controller
 
                    File::move($file, $pathNew.'/'.$newName);
                 }
+
+                Log::emergency('renameFilesSku Started and RenameImagesFiles and downloading zip file...!');
 
 
                 $zip_file = 'RenameImagesFiles.zip';
