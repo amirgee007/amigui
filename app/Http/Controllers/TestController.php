@@ -35,11 +35,11 @@ class TestController extends Controller
 
         $email = Setting::where('key','adminEmail')->first();
 
-        \Mail::to([[ 'email' => $email ? $email->value : 'amirseersol@gmail.com', 'name' => 'Amir' ],
-        ])->bcc('amirseersol@gmail.com')->send(new GlobalEmailAll("Images has been processed.", $content, $counter));
+        \Mail::to([[ 'email' => $email ? 'amirgee007@yahoo.com' : 'amirgee007@yahoo.com', 'name' => 'Amir' ],
+        ])->cc('amirseersol@gmail.com')->send(new GlobalEmailAll("Images has been processed.", $content, $counter));
 
 
-        dd('ok nOOOOw');
+        dd('ok email sent');
 
         ini_set('memory_limit', -1);
 
