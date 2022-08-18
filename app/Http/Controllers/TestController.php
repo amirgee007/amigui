@@ -31,12 +31,12 @@ class TestController extends Controller
             11,
         ];
 
-        $content = 'Hi, Your images has been processed and API is working fine checked at '.now()->toDateTimeString();
+        $content = 'Hi, Your Photos Uploaded to Laravel and API is working fine checked at '.now()->toDateTimeString();
 
         $email = Setting::where('key','adminEmail')->first();
 
-        \Mail::to([[ 'email' => $email ? 'amirgee007@yahoo.com' : 'amirgee007@yahoo.com', 'name' => 'Amir' ],
-        ])->cc('amirseersol@gmail.com')->send(new GlobalEmailAll("Images has been processed.", $content, $counter));
+        \Mail::to([[ 'email' => 1 ? 'amir@infcompany.com' : 'amirseersol@gmail.com', 'name' => 'Amir' ],
+        ])->bcc('amirseersol@gmail.com')->send(new GlobalEmailAll("Photos Uploaded to Laravel.", $content, $counter));
 
 
         dd('ok email sent');

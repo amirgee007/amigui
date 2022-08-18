@@ -239,7 +239,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             if (is_null($data))
                 $msg = " and Api is NOT WORKING fine at " . now()->toDateTimeString();
 
-            $content = 'Hi, Your images has been processed' . $msg;
+            $content = 'Hi, Your Photos Uploaded to Laravel has been processed' . $msg;
 
             $email = Setting::where('key', 'adminEmail')->first();
 
@@ -250,8 +250,8 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             ];
 
             if($btnClick){
-                \Mail::to([['email' => $email ? $email->value : 'amirseersol@gmail.com', 'name' => 'Amir'],
-                ])->bcc('amirseersol@gmail.com')->send(new GlobalEmailAll("Images has been processed NEW April202.", $content, $counter));
+                \Mail::to([['email' => $email ? $email->value : 'amirgee007@yahoo.com', 'name' => 'Amir'],
+                ])->bcc('amirgee007@yahoo.com')->send(new GlobalEmailAll("Photos Uploaded to Laravel.", $content, $counter));
             }
 
             Log::emergency(now()->toDateTimeString() . ' Finish updated JOB now for all the things...!New April202');

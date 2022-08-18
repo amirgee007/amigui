@@ -31,7 +31,7 @@ class GlobalEmailAll extends Mailable
      */
     public function build()
     {
-        $this->from('abc@abc.se', 'Anonymous');
+        $this->from('admin@amiguiec.xyz', 'Laravel Server');
 
         return $this->markdown('emails.system.index')->with(['content' => $this->content]);
     }
