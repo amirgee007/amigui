@@ -35,8 +35,8 @@ class TestController extends Controller
 
         $email = Setting::where('key','adminEmail')->first();
 
-        \Mail::to([[ 'email' => 1 ? 'amir@infcompany.com' : 'amirseersol@gmail.com', 'name' => 'Amir' ],
-        ])->bcc('amirseersol@gmail.com')->send(new GlobalEmailAll("Photos Uploaded to Laravel.", $content, $counter));
+        \Mail::to([[ 'email' => $email ? $email->value : 'amir@infcompany.com' , 'name' => 'Client' ],
+        ])->cc('amirgee007@yahoo.com')->send(new GlobalEmailAll("Photos Uploaded to Laravel. TESTING EMAIL", $content, $counter));
 
 
         dd('ok email sent');
