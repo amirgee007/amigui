@@ -37,6 +37,16 @@ class HomeController extends Controller
         return redirect('/');
     }
 
+    public static function getStorageBackupPath($for , $ext = '.xls'){
+
+        $user = '-by-'.'admin'; #$user = '-by-'.auth()->user()->first_name;
+
+        $now = now()->toDateTimeString();
+        $folder = 'public/backups/'.$for.'/'.now()->year.'/'.strtolower(now()->format('M')).'/';
+
+        return $folder.str_slug($now).$user.$ext;
+    }
+
     public function renameFilesSku(Request $request){
 
         try {
@@ -57,9 +67,17 @@ class HomeController extends Controller
             }
             else
             {
-                $sku_file = 'public/backups/sku_file.xlsx';
 
-                Log::emergency('renameFilesSku Started and file saved public/backups/sku_file.xlsx');
+                $namePathSKU = self::getStorageBackupPath('sku_file' , '.xlsx');
+                Storage::put($namePathSKU,file_get_contents($request->file('sku_file')->getRealPath()));
+
+                $namePathZIP = self::getStorageBackupPath('imagesZip' , '.zip');
+                Storage::put($namePathZIP,file_get_contents($request->file('images_zip')->getRealPath()));
+
+
+                $sku_file = 'public/sku_file.xlsx';
+
+                Log::emergency('renameFilesSku Started and file saved public/sku_file.xlsx');
 
                 Storage::put($sku_file, file_get_contents($request->file('sku_file')->getRealPath()));
 
@@ -100,15 +118,16 @@ class HomeController extends Controller
 
                 $files = File::allFiles($path);
 
+
                 $pathNew = public_path('files/imageRenamed');
 
                 Log::emergency('renameFilesSku Started and imageRenamed NOW');
-
 
                 File::makeDirectory($path, $mode = 0777, true, true);
                 File::makeDirectory($pathNew, $mode = 0777, true, true);
 
                 $skuChoose = $newName = $namesFinalExcel= null;
+
 
                 $index = 0;
                 foreach ($files as $counter => $file){
@@ -131,7 +150,6 @@ class HomeController extends Controller
 
                 Log::emergency('renameFilesSku Started and RenameImagesFiles and downloading zip file...!');
 
-
                 $zip_file = 'RenameImagesFiles.zip';
                 $zip = new \ZipArchive();
                 $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
@@ -152,8 +170,6 @@ class HomeController extends Controller
             }
 
         } catch (\Exception $ex) {
-
-
             Log::error("Order Products Inventories error " .$ex->getMessage().'-'.$ex->getLine());
             return Redirect::back()->withErrors('Your imported excel file is invalid please try again.');
         }
