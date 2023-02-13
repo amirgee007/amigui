@@ -81,12 +81,12 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    Laravel Shopify APP
                 </div>
 
-                <div class="links">
-                    <a target="_blank" href="http://seersol.com">Made by seersol</a>
-                </div>
+                {{--<div class="links">--}}
+                    {{--<a target="_blank" href="#">Made by seersol</a>--}}
+                {{--</div>--}}
             </div>
         </div>
     </body>

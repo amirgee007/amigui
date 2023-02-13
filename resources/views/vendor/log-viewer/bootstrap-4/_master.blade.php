@@ -255,7 +255,7 @@
                 LogViewer - <span class="badge badge-info">version {{ log_viewer()->version() }}</span>
             </p>
             <p class="text-muted pull-right">
-                Created with <i class="fa fa-heart"></i> by SeerSol <sup>&copy;</sup>
+                Created with <i class="fa fa-heart"></i> by XYZ <sup>&copy;</sup>
             </p>
         </div>
     </footer>
