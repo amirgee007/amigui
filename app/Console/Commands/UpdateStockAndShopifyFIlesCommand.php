@@ -102,9 +102,8 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             $categoryArray = $categoryParents = $brandsArray = [];
 
-            $categoriesResponse = HttpApiRequest::getContificoApi('categoria');
-
-            $brandsResponse = HttpApiRequest::getContificoApi('marca');
+            $categoriesResponse = HttpApiRequest::getContificoApi('categoria' , 'v1');
+            $brandsResponse = HttpApiRequest::getContificoApi('marca' , 'v1');
 
             foreach ($categoriesResponse as $category) {
 
@@ -132,23 +131,31 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             $page_count = 1;
 
             $max_pages = (env('APP_ENV') == 'local') ? 5 : 1000;
-
             $taxPercentage = $setting->value;
 
             $allDataArrStock = $allDataArrSHopify = [];
 
+            Log::info('getContificoApi gets started at this time NOW....!'.now()->toDateTimeString());
+
             do {
 
                 #Log::debug($page_count. ' Done createStockShopifyOutPutExcelFile count here api');
+                #$typeWithParams = "producto?result_size=$result_size&result_page=$page_count";
 
-                $typeWithParams = "producto?result_size=$result_size&result_page=$page_count";
+                if($page_count == 1)
+                    $typeWithParams = "producto/?estado=A";
+                else
+                    $typeWithParams = "producto/?estado=A&page=$page_count";
 
                 $data = HttpApiRequest::getContificoApi($typeWithParams);
 
+                #"count" => 0 "next" => null "previous" => null "results" => []
+                #"count" => 90878 "next" => "" "previous" => null "results" => array:100
+
                 $page_count++;
 
-                if (is_array($data) && count($data) > 1) {
-                    foreach ($data as $row) {
+                if ($data['count'] > 0 && count($data['results']) > 1) {
+                    foreach ($data['results'] as $row) {
 
                         $totalProductProcessed++;
 
@@ -164,14 +171,6 @@ class UpdateStockAndShopifyFIlesCommand extends Command
                         $imagesExistArray = Storage::files($filenamePath);
 
                         if (count($imagesExistArray) == 0) {
-
-//                            $dt = [
-//                                'codigo_number' => $row['codigo'],
-//                                'message' => 'Image not found in the directory.',
-//                            ];
-//
-//                          ApiErrorLog::updateOrCreate($dt, $dt);
-
                             $totalImagesNotFound++;
                             continue;
                         }
@@ -181,37 +180,14 @@ class UpdateStockAndShopifyFIlesCommand extends Command
                         if (is_array($response123)) {
                             $allDataArrSHopify[] = $response123;
                         }
-
-//                        if($existingProduct == 0) {}
-//                        else
-//                        {
-//
-//                            $dt = [
-//                                'codigo_number' => $row['codigo'],
-//                                'message' => 'Image already exist in the database.',
-//                            ];
-//
-//                            ApiErrorLog::updateOrCreate($dt, $dt);
-//
-//                        }
                     }
                 }
-//                else{
-//
-//                    $dt = [
-//                        'codigo_number' => '0',
-//                        'message' => 'Api not working fine and we get response nothing.',
-//                    ];
-//
-//                    ApiErrorLog::updateOrCreate($dt, $dt);
-//                    break;
-//                }
 
-            } while ($page_count <= $max_pages);
+            } while ($data['next']);
+
+            Log::info('getContificoApi gets ENDED at this time NOW....!'.now()->toDateTimeString());
 
             Storage::deleteDirectory('temp');
-
-            $errors = ApiErrorLog::get()->toArray();
 
             $pathStock = 'temp/PVP-2.xlsx';
             $pathShopify = 'temp/Shopify-OUTPUT-FILE-Ready-to-Import123.xlsx';
@@ -227,16 +203,12 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             Log::alert('createStockFileShopify Created successfully....!');
 
-
-            $result_size = 500;
-            $page_count = 1;
-
-            $typeWithParams = "producto?result_size=$result_size&result_page=$page_count";
+            $typeWithParams = "producto/?estado=A";
 
             $msg = " and Api is WORKING fine last checked at ." . now()->toDateTimeString();
             $data = HttpApiRequest::getContificoApi($typeWithParams);
 
-            if (is_null($data))
+            if ($data['count'] == 0)
                 $msg = " and Api is NOT WORKING fine at " . now()->toDateTimeString();
 
             $content = 'Hi, Your Photos Uploaded to Laravel has been processed' . $msg;
@@ -310,7 +282,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             }
 
             $iCellCategory = $categoryWithoutGender = $subCategory;
-            $hCell = self::getCat2Data($subCategory);
+            #$hCell = self::getCat2Data($subCategory);
 
             $brand = str_replace('#', '', $brand);
 
@@ -341,7 +313,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             $edadDatePatternColumn = $edadAge ? (',' . $this->monthsSpanish[$edadAge->format('F')] . '-' . $edadAge->format('y')) : '';
 
             $sColumnBrandLen = strlen($pCellBrand);
-            $tColumnTypeLen = strlen($fatherCategory);
+            #$tColumnTypeLen = strlen($fatherCategory);
             #$priceWithTax = $singleRow['pvp1'] + (($taxPercentage / 100) * $singleRow['pvp1']);
 
             //$titleCellBefore = $iCellCategory .' '. ($tColumnTypeLen<10 ? @$fatherCategory : '') .' '.$hCell.' '.($sColumnBrandLen > 2 ? $pCellBrand : '');
@@ -382,7 +354,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             $titleCell = trim($titleCell);
 
-            $sizeColor = ShopifySizeColor::where('codigo', $singleRow['codigo'])->first();
+            #$sizeColor = ShopifySizeColor::where('codigo', $singleRow['codigo'])->first();
 
             #new two fields added here
 
@@ -419,7 +391,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             $finalTags = str_replace("sin Marca", "-", $finalTags);
             $finalTags = str_replace("Sin Marca", "-", $finalTags);
 
-            Log::info($singleRow['codigo']. ' SKU its price NO '.$priceWithTax);
+            #Log::info($singleRow['codigo']. ' SKU its price NO '.$priceWithTax);
 
             return [
 

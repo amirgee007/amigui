@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Log;
 class HttpApiRequest
 {
 
-    public static function getContificoApi($type) {
+    public static function getContificoApi($type , $api = 'v2') {
 
         #$uri = "https://amigui.contifico.com/sistema/api/v1"."/".$type;
-        $uri = "https://api.contifico.com/sistema/api/v1"."/".$type;
+        $uri = "https://api.contifico.com/sistema/api/$api"."/".$type;
 
         try {
 
@@ -28,7 +28,6 @@ class HttpApiRequest
         } catch (\Exception $ex) {
             Log::error('getContificoApi API '. $type. $ex->getMessage() . $ex->getLine() . $ex->getFile());
             SyncJob::truncate();
-
             return null;
         }
     }
