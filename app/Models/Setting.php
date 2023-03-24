@@ -8,4 +8,10 @@ class Setting extends Model
 {
     protected $table = 'settings';
     protected $guarded = [];
+
+
+    public function scopeMine($query){
+        return $query->where('label', auth()->id());
+    }
+
 }

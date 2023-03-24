@@ -27,23 +27,23 @@ class UpdateStockAndShopifyFilesCreateJob implements ShouldQueue
     protected $count = 0;
     public  $syncJobId;
     public  $syncJobType;
-    public  $btnClick;
+    public  $btnClick , $userClicked;
 
     public  $tries  =  3;
 
-    public function __construct($jobId, $jobType, $btnClick)
+    public function __construct($jobId, $jobType, $btnClick, $userClicked)
     {
         $this->syncJobId = $jobId;
         $this->syncJobType = $jobType;
         $this->btnClick = $btnClick;
+        $this->userClicked = $userClicked;
     }
 
 
     public function handle(){
 
         Log::emergency(now()->toDateTimeString() . ' started updated JOB now for all the things...!New feb2022');
-
-        (new UpdateStockAndShopifyFIlesCommand())->createStockShopifyOutPutExcelFile($this->btnClick);
+        (new UpdateStockAndShopifyFIlesCommand())->createStockShopifyOutPutExcelFile($this->btnClick , $this->userClicked);
     }
 
     public function failed(\Exception $exception)

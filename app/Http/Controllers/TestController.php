@@ -32,13 +32,11 @@ class TestController extends Controller
             $categoryArray = $categoryParents = $brandsArray = [];
             $result_size = 5;
 
-            $files = Storage::allFiles('public/shopify-images/');
-
             $totalImagesFound = 0;
             $totalImagesNotFound = 0;
             $totalProductProcessed = 0;
 
-            if ($totalImagesFound = count($files)) {
+            if ($totalImagesFound) {
                 $totalImagesFound = (int)($totalImagesFound / 2);
             }
 

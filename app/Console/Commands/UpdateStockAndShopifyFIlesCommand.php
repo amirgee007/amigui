@@ -9,6 +9,7 @@ use App\Models\AlreadyExistProduct;
 use App\Models\ApiErrorLog;
 use App\Models\ShopifySizeColor;
 use App\Models\SyncJob;
+use App\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -86,7 +87,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
     }
 
-    public function createStockShopifyOutPutExcelFile($btnClick = 0)
+    public function createStockShopifyOutPutExcelFile($btnClick = 0 , $userClicked = 1)
     {
 
         ini_set('memory_limit', '-1');
@@ -118,7 +119,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             $result_size = 500;
 
-            $files = Storage::allFiles('public/shopify-images/');
+            $files = Storage::allFiles("public/shopify-images/$userClicked");
 
             $totalImagesFound = 0;
             $totalImagesNotFound = 0;
@@ -167,7 +168,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
                         $matching = ltrim(trim($row['codigo']), '0');
                         $existingProduct = AlreadyExistProduct::where('codigo', 'like', "%$matching%")->count();
 
-                        $filenamePath = ('public/shopify-images/' . trim($row['codigo']));
+                        $filenamePath = ("public/shopify-images/$userClicked/" . trim($row['codigo']));
                         $imagesExistArray = Storage::files($filenamePath);
 
                         if (count($imagesExistArray) == 0) {
@@ -187,17 +188,24 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             Log::info('getContificoApi gets ENDED at this time NOW....!'.now()->toDateTimeString());
 
-            Storage::deleteDirectory('temp');
+            Storage::deleteDirectory("temp/$userClicked");
 
-            $pathStock = 'temp/PVP-2.xlsx';
-            $pathShopify = 'temp/Shopify-OUTPUT-FILE-Ready-to-Import123.xlsx';
+            $pathStock = "temp/userClicked/PVP-2.xlsx";
+            $pathShopify = "temp/userClicked/Shopify-OUTPUT-FILE-Ready-to-Import123.xlsx";
             #$pathApiError = 'temp/Api-Error-Logs.xlsx';
 
             Excel::store(new StockFileExport($allDataArrStock), $pathStock);
             Excel::store(new ShopifyImportFileExport($allDataArrSHopify), $pathShopify);
             #Excel::store(new ApiLogsExcelFileExport($errors), $pathApiError);
 
-            Setting::updateOrCreate(['key' => 'last-change'], ['value' => now()->toDateTimeString()]);
+            Setting::updateOrCreate([
+                'key' => 'last-change',
+                'label' => $userClicked
+            ], [
+                'value' => now()->toDateTimeString(),
+                'label' => auth()->id(),
+                ]
+            );
 
             SyncJob::where('type', 'stock-export')->update(['status' => 'completed']);
 
@@ -213,7 +221,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             $content = 'Hi, Your Photos Uploaded to Laravel has been processed' . $msg;
 
-            $email = Setting::where('key', 'adminEmail')->first();
+            $email = Setting::where('label' ,$userClicked)->where('key', 'adminEmail')->first();
 
             $counter = [
                 $totalProductProcessed,
@@ -221,9 +229,16 @@ class UpdateStockAndShopifyFIlesCommand extends Command
                 $totalImagesNotFound,
             ];
 
+            $user = User::find($userClicked);
+            $subject = "Photos Uploaded to Laravel";
+
+            if($user)
+                $subject = $subject." By ".strtoupper($user->name);
+
             if($btnClick){
-                \Mail::to([['email' => $email ? $email->value : 'amirgee007@yahoo.com', 'name' => 'Amir'],
-                ])->bcc('amirgee007@yahoo.com')->send(new GlobalEmailAll("Photos Uploaded to Laravel.", $content, $counter));
+                \Mail::to([['email' => $email ? $email->value : 'amirgee007@yahoo.com', 'name' => 'Amir'],])
+                    ->bcc('amirgee007@yahoo.com')
+                    ->send(new GlobalEmailAll($subject, $content, $counter));
             }
 
             Log::emergency(now()->toDateTimeString() . ' Finish updated JOB now for all the things...!New April202');
@@ -254,6 +269,8 @@ class UpdateStockAndShopifyFIlesCommand extends Command
                 'Stock' => $singleRow['cantidad_stock'],
             ];
 
+
+
         } catch (\Exception $ex) {
             Log::error($singleRow['codigo'] . ' codigo single row error.' . $ex->getMessage() . $ex->getLine());
             return null;
@@ -263,7 +280,6 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
     public function getShopifyFileRow($singleRow, $categoriesArray, $parentCategory, $brandsArrayHere, $images, $tags)
     {
-
         try {
 
             $subCategory = $fatherCategory = $brand = $pCellBrand = $gender = '';
@@ -432,7 +448,6 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             return null;
         }
-
     }
 
     public static function isValidDate($dateInput)

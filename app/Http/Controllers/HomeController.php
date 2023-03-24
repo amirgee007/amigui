@@ -181,17 +181,17 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $tax = Setting::where('key','tax')->first();
-        $tags = Setting::where('key','tags')->first();
-        $email = Setting::where('key','adminEmail')->first();
+        $tax = Setting::mine()->where('key','tax')->first();
+        $tags = Setting::mine()->where('key','tags')->first();
+        $email = Setting::mine()->where('key','adminEmail')->first();
 
-        $lastUpdate = Setting::where('key','last-change')->first();
+        $lastUpdate = Setting::mine()->where('key','last-change')->first();
         $files = [];
 
         if(\request('is_sku')){
-
+            $userId = \auth()->id();
             $folder = request('is_sku');
-            $filenamePath = ('public/shopify-images/'.$folder);
+            $filenamePath = ("public/shopify-images/$userId/".$folder);
             $files = Storage::files($filenamePath);
         }
 
@@ -200,8 +200,9 @@ class HomeController extends Controller
 
     public function resetAllImages(){
 
+        $userId = \auth()->id();
         $file = new Filesystem;
-        $file->cleanDirectory('storage/shopify-images');
+        $file->cleanDirectory("storage/shopify-images/$userId");
 
         session()->flash('app_message', 'Your all images in the PROJECT are removed please upload again.');
 
@@ -212,7 +213,10 @@ class HomeController extends Controller
 
         $data = array_slice($request->all(), 1, 1, true);
 
-        Setting::updateOrCreate(['key' => key($data)], ['value' => reset($data)]);
+        Setting::updateOrCreate(['key' => key($data)], [
+            'value' => reset($data),
+            'label' => \auth()->id(),
+        ]);
         session()->flash('app_message', 'Settings has been updated successfully.');
 
         return back();
@@ -255,7 +259,8 @@ class HomeController extends Controller
                             $folder = $names[0];
                         }
 
-                        $filenamePath = ('public/shopify-images/' . $folder . '/' . $filenameWithExt);
+                        $userId = \auth()->id();
+                        $filenamePath = ("public/shopify-images/$userId/" . $folder . '/' . $filenameWithExt);
 
                         \Storage::disk('local')->put($filenamePath, file_get_contents($imgUpload->getRealPath()));
 
@@ -269,35 +274,38 @@ class HomeController extends Controller
     }
 
     public function downloadStockExcelFIle(){
-        try{
-            $path = storage_path('app/temp/PVP-2.xlsx');
+        try {
+
+            $userId = \auth()->id();
+
+            $path = storage_path("app/temp/$userId/PVP-2.xlsx");
             return response()->download($path);
-        }
-        catch (\Exception $ex){
+        } catch (\Exception $ex) {
 
             session()->flash('app_error', 'No file found please try to generate file or contact admin.');
             return back();
         }
-
     }
 
-    public function downloadErrorLogsFIle(){
-        try{
-            $path = storage_path('app/temp/Api-Error-Logs.xlsx');
-            return response()->download($path);
-        }
-        catch (\Exception $ex){
-
-            session()->flash('app_error', 'No file found please try to generate file or contact admin.');
-            return back();
-        }
-
-    }
+//    public function downloadErrorLogsFIle(){
+//        try{
+//            $path = storage_path('app/temp/Api-Error-Logs.xlsx');
+//            return response()->download($path);
+//        }
+//        catch (\Exception $ex){
+//
+//            session()->flash('app_error', 'No file found please try to generate file or contact admin.');
+//            return back();
+//        }
+//
+//    }
 
     public function downloadShopifyOutPutExcelFile(){
 
         try{
-            $path = storage_path('app/temp/Shopify-OUTPUT-FILE-Ready-to-Import123.xlsx');
+
+            $userId = \auth()->id();
+            $path = storage_path("app/temp/$userId/Shopify-OUTPUT-FILE-Ready-to-Import123.xlsx");
 
             return response()->download($path);
         }
@@ -316,14 +324,14 @@ class HomeController extends Controller
 
         # check if there is product sync job
         $activeJob = SyncJob::activeStatus('stock-export')->first();
+        $userClicked = \auth()->id();
 
         if (!$activeJob) {
             $newSyncJob = SyncJob::create(['type' => 'stock-export']);
-            UpdateStockAndShopifyFilesCreateJob::dispatch($newSyncJob->id, $newSyncJob->type , $btnClick);
+            UpdateStockAndShopifyFilesCreateJob::dispatch($newSyncJob->id, $newSyncJob->type , $btnClick , $userClicked);
 
             session()->flash('app_message', 'Your cron job has been scheduled and starting soon please wait.');
         }
-
 
         return \redirect()->route('home');
     }

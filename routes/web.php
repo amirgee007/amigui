@@ -17,11 +17,10 @@ Route::get('/', function () {
 
 Route::get('abc/test2', 'TestController@index2');
 
-
 Auth::routes(['register' => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::post('/save-settings', 'HomeController@saveSettings')->name('save.settings');
+Route::post('/save-settings', 'HomeController@saveSettings')->name('save.settings'); #ok with new logic
 
 Route::get('logout', 'HomeController@logout')->name('logOutCustom');
 
@@ -35,7 +34,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/reset-all-images', [
         'as' => 'reset.all.images',
         'uses' => 'HomeController@resetAllImages'
-    ]);
+    ]);#ok with new logic
 
     Route::post('/rename-files-sku', [
         'as' => 'rename.files.sku',
@@ -45,21 +44,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/process-images-into-shopify/{btnClick?}', [
         'as' => 'process.images.files.excel',
         'uses' => 'HomeController@processImagesIntoExcelFile'
-    ]);
+    ]); #ok with new logic
 
     Route::get('/download-shopify-import-file', [
         'as' => 'download.shopify.import.excel',
         'uses' => 'HomeController@downloadShopifyOutPutExcelFile'
-    ]);
+    ]); #ok with new logic
 
     Route::get('/download-stock-excel', [
         'as' => 'download.stock.excel',
         'uses' => 'HomeController@downloadStockExcelFIle'
-    ]);
-
-    Route::get('/download-error-logs', [
-        'as' => 'download.erroLogs.excel',
-        'uses' => 'HomeController@downloadErrorLogsFIle'
-    ]);
+    ]); #ok with new logic
 
 });
