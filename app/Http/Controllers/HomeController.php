@@ -62,6 +62,8 @@ class HomeController extends Controller
                 'sku_file' => 'required|mimes:xlsx',
             ]);
 
+            $userId = \auth()->id();
+
             if($v->fails()) {
                 return back()->withErrors($v);
             }
@@ -75,7 +77,7 @@ class HomeController extends Controller
                 Storage::put($namePathZIP,file_get_contents($request->file('images_zip')->getRealPath()));
 
 
-                $sku_file = 'public/sku_file.xlsx';
+                $sku_file = "public/$userId/sku_file.xlsx";
 
                 Log::emergency('renameFilesSku Started and file saved public/sku_file.xlsx');
 
@@ -97,8 +99,8 @@ class HomeController extends Controller
                 }
 
                 $file = new Filesystem;
-                $file->cleanDirectory('files/imageOriginal');
-                $file->cleanDirectory('files/imageRenamed');
+                $file->cleanDirectory("files/$userId/imageOriginal");
+                $file->cleanDirectory("files/$userId/imageRenamed");
 
                 Log::emergency('renameFilesSku Started and directory created NOW');
 
@@ -106,7 +108,7 @@ class HomeController extends Controller
                 $file = $request->file('images_zip');
 
                 if ($zip->open($file->path()) === TRUE) {
-                    $zip->extractTo('files/imageOriginal');
+                    $zip->extractTo("files/$userId/imageOriginal");
                     $zip->close();
 
                 } else {
@@ -114,12 +116,11 @@ class HomeController extends Controller
                     return Redirect::back()->withErrors('Your imported ZIP file is invalid please try again.');
                 }
 
-                $path = public_path('files/imageOriginal');
+                $path = public_path("files/$userId/imageOriginal");
 
                 $files = File::allFiles($path);
 
-
-                $pathNew = public_path('files/imageRenamed');
+                $pathNew = public_path("files/$userId/imageRenamed");
 
                 Log::emergency('renameFilesSku Started and imageRenamed NOW');
 
@@ -128,16 +129,13 @@ class HomeController extends Controller
 
                 $skuChoose = $newName = $namesFinalExcel= null;
 
-
                 $index = 0;
                 foreach ($files as $counter => $file){
 
                    if($counter%2 == 0){
                        $skuChoose = @$skusFinal[$index];
                        $newName = $skuChoose.'.jpg';
-
                        $index++;
-
                    }
                    else{
                        $newName = $skuChoose.'-2.jpg';
@@ -170,7 +168,7 @@ class HomeController extends Controller
             }
 
         } catch (\Exception $ex) {
-            Log::error("Order Products Inventories error " .$ex->getMessage().'-'.$ex->getLine());
+            Log::error("Your imported excel file is invalid please try again RENAMING images " .$ex->getMessage().'-'.$ex->getLine());
             return Redirect::back()->withErrors('Your imported excel file is invalid please try again.');
         }
     }
