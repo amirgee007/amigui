@@ -39,7 +39,7 @@ class HomeController extends Controller
 
     public static function getStorageBackupPath($for , $ext = '.xls'){
 
-        $user = '-by-'.'admin'; #$user = '-by-'.auth()->user()->first_name;
+        $user = '-by-'.auth()->user()->name;
 
         $now = now()->toDateTimeString();
         $folder = 'public/backups/'.$for.'/'.now()->year.'/'.strtolower(now()->format('M')).'/';
@@ -213,10 +213,13 @@ class HomeController extends Controller
 
         $data = array_slice($request->all(), 1, 1, true);
 
-        Setting::updateOrCreate(['key' => key($data)], [
-            'value' => reset($data),
+        Setting::updateOrCreate([
+            'key' => key($data),
             'label' => \auth()->id(),
+        ], [
+            'value' => reset($data),
         ]);
+
         session()->flash('app_message', 'Settings has been updated successfully.');
 
         return back();
@@ -224,7 +227,10 @@ class HomeController extends Controller
 
     public function updateTax(Request $request){
 
-       Setting::updateOrCreate(['key' => 'tax'], ['value' => $request->tax]);
+       Setting::updateOrCreate([
+           'key' => 'tax',
+           'label' => \auth()->id(),
+       ], ['value' => $request->tax]);
        session()->flash('app_message', 'Tax has been updated successfully.');
 
        return back();
@@ -277,8 +283,8 @@ class HomeController extends Controller
         try {
 
             $userId = \auth()->id();
-
             $path = storage_path("app/temp/$userId/PVP-2.xlsx");
+
             return response()->download($path);
         } catch (\Exception $ex) {
 
