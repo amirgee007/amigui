@@ -59,12 +59,20 @@ class UserController extends Controller
         $validatedData = $request->validate($rules);
 
         $user = User::findOrFail($id);
+
+//        $lastAdmin = User::where('role' , 'admin')->where('id' , '<>' , $id)->count();
+//        if ($lastAdmin == 0 && $request->role =='user' ) {
+//            return redirect()->back()->with('success', 'Cannot update ROLE of last user.');
+//        }
+
         $user->name = $request->name;
         $user->email = $request->email;
         $user->role = $request->role;
+
         if ($request->password) {
             $user->password = Hash::make($request->password);
         }
+
         $user->save();
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');

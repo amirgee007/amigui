@@ -29,7 +29,7 @@
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
+            <div class="container" style="background-color:    aliceblue;">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }} <small>(https://api.contifico.com)</small>
                 </a>
@@ -55,23 +55,23 @@
 
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('logOutCustom') }}">
-                                    ({{ strtoupper(Auth::user()->name) }})  {{ __('Logout') }}
+                                   <small>({{ strtoupper(Auth::user()->name) }}) </small>  {{ __('Logout') }}
                                 </a>
                             </li>
+
+                            @if(Auth::user()->role == 'admin')
+                            <li class="nav-item">
+                                <a  class="nav-link" href="{{ route('users.index') }}" role="button">
+                                    Users
+                                </a>
+                            </li>
+                            @endif
 
                             <li class="nav-item">
                                 <a  class="nav-link" href="{{ route('log-viewer::dashboard') }}" target="_blank" role="button">
                                     Logs
                                 </a>
                             </li>
-
-                            @if(Auth::user()->role == 'admin')
-                            <li class="nav-item">
-                                <a  class="nav-link" href="{{ route('users.index') }}" target="_blank" role="button">
-                                    Users
-                                </a>
-                            </li>
-                            @endif
 
                         @endguest
                     </ul>
