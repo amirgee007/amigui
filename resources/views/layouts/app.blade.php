@@ -60,12 +60,18 @@
                             </li>
 
                             <li class="nav-item">
-
                                 <a  class="nav-link" href="{{ route('log-viewer::dashboard') }}" target="_blank" role="button">
                                     Logs
                                 </a>
-
                             </li>
+
+                            @if(Auth::user()->role == 'admin')
+                            <li class="nav-item">
+                                <a  class="nav-link" href="{{ route('users.index') }}" target="_blank" role="button">
+                                    Users
+                                </a>
+                            </li>
+                            @endif
 
                         @endguest
                     </ul>

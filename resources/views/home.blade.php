@@ -52,7 +52,6 @@
                                     <span id="imageLoader"><i class="fa fa-refresh" aria-hidden="true"></i></span> Process images into XLS
                                 </a>
 
-
                             </div>
 
                             <div class="col-md-12">
@@ -102,7 +101,6 @@
                             </div>
                         </form>
 
-
                         <hr>
                         <form method="GET" action="{{route('home')}}">
 
@@ -145,7 +143,7 @@
                         </form>
 
 
-                    @if(request('is_sku'))
+                        @if(request('is_sku'))
                             <br>
                             <div class="form-group row mb-0">
                                 <div class="container">

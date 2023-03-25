@@ -56,4 +56,17 @@ Route::group(['middleware' => 'auth'], function () {
         'uses' => 'HomeController@downloadStockExcelFIle'
     ]); #ok with new logic
 
+
+
+
+    Route::group(['middleware' => 'admin'], function() {
+        Route::resource('users', 'UserController')->names([
+            'index' => 'users.index',
+            'create' => 'users.create',
+            'store' => 'users.store',
+            'edit' => 'users.edit',
+            'update' => 'users.update',
+            'destroy' => 'users.destroy',
+        ]);
+    });
 });
