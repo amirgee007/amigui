@@ -19,11 +19,11 @@ Hi, Andres
     | ------------- |:-------------:| --------:|
     | {{@$counter[0]}}    | {{@$counter[1]}}      | {{@$counter[2]}}      |
 @endcomponent
+
 ###Images not found is due to no INVENTORY.
 {{--<a target="_blank" href="{{route('download.erroLogs.excel')}}">HERE</a>--}}
 
-
 <br>
-Amigui Laravel <br>
-info@amigui.com.ec
+User: **{{$user}}** <br>
+URL: **{{env('APP_URL')}}**
 @endcomponent

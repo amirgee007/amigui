@@ -31,12 +31,16 @@ class TestController extends Controller
             11,
         ];
 
+        $user = auth()->user()->name;
+
+
+
         $content = 'Hi, Your Photos Uploaded to Laravel and API is working fine checked at '.now()->toDateTimeString();
 
         $email = Setting::where('key','adminEmail')->first();
 
-        \Mail::to([[ 'email' => $email ? $email->value : 'amir@infcompany.com' , 'name' => 'Client' ],
-        ])->bcc('amir@infcompany.com')->send(new GlobalEmailAll("Photos Uploaded to Laravel. TESTING EMAIL", $content, $counter));
+        \Mail::to([[ 'email' => 'amir@infcompany.com' , 'name' => 'Client' ],
+        ])->bcc('amirgee007@yahoo.com')->send(new GlobalEmailAll("Photos Uploaded to Laravel. TESTING EMAIL", $content, $counter , $user));
 
 
         dd('ok email sent');

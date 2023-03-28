@@ -232,19 +232,22 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             $user = User::find($userClicked);
             $subject = "Photos Uploaded to Laravel";
 
-            if($user)
+            $name = 'Null';
+
+            if($user){
                 $subject = $subject." By ".strtoupper($user->name);
+                $name = strtoupper($user->name);
+            }
 
             if($btnClick){
                 \Mail::to([['email' => $email ? $email->value : 'amirgee007@yahoo.com', 'name' => 'Amir'],])
                     ->bcc('amirgee007@yahoo.com')
-                    ->send(new GlobalEmailAll($subject, $content, $counter));
+                    ->send(new GlobalEmailAll($subject, $content, $counter , $name));
             }
 
             Log::emergency(now()->toDateTimeString() . ' Finish updated JOB now for all the things...!New April202');
 
             SyncJob::truncate();
-
 
         } catch (\Exception $ex) {
             Log::error(' JOB FAILED createStockFileShopify. ' . $ex->getMessage() . $ex->getLine());

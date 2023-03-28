@@ -16,12 +16,13 @@ class GlobalEmailAll extends Mailable
      *
      * @return void
      */
-    public  $content,$counter;
-    public function __construct($subject, $content , $counter = [])
+    public  $content,$counter,$user;
+    public function __construct($subject, $content , $counter = [] , $user)
     {
         $this->content = $content;
         $this->subject = $subject;
         $this->counter = $counter;
+        $this->user = $user;
     }
 
     /**
@@ -32,7 +33,6 @@ class GlobalEmailAll extends Mailable
     public function build()
     {
         $this->from('admin@amiguiec.xyz', 'Laravel Server');
-
         return $this->markdown('emails.system.index')->with(['content' => $this->content]);
     }
 }
