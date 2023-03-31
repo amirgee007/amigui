@@ -187,6 +187,8 @@ class UpdateStockAndShopifyFIlesCommand extends Command
                     }
                 }
 
+                Log::debug($data['count'] . ' Still working and running in the WHILE LOOP....!!!!');
+
             } while ($data['next']);
 
             Log::info('getContificoApi gets ENDED at this time NOW....!'.now()->toDateTimeString());
