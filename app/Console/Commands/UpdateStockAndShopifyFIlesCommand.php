@@ -193,8 +193,8 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             Storage::deleteDirectory("temp/$userClicked");
 
-            $pathStock = "temp/userClicked/PVP-2.xlsx";
-            $pathShopify = "temp/userClicked/Shopify-OUTPUT-FILE-Ready-to-Import123.xlsx";
+            $pathStock = "temp/$userClicked/PVP-2.xlsx";
+            $pathShopify = "temp/$userClicked/Shopify-OUTPUT-FILE-Ready-to-Import123.xlsx";
             #$pathApiError = 'temp/Api-Error-Logs.xlsx';
 
             Excel::store(new StockFileExport($allDataArrStock), $pathStock);
