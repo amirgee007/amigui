@@ -68,8 +68,11 @@ class UpdateStockAndShopifyFIlesCommand extends Command
     public function handle()
     {
 
+        $userClicked = \auth()->id();
+        $nameJOB = 'stock-export-'.$userClicked;
+
         # check if there is product sync job
-        $activeJob = SyncJob::activeStatus('stock-export')->first();
+        $activeJob = SyncJob::activeStatus($nameJOB)->first();
 
         if (!$activeJob) {
 
@@ -207,7 +210,10 @@ class UpdateStockAndShopifyFIlesCommand extends Command
                 ]
             );
 
-            SyncJob::where('type', 'stock-export')->update(['status' => 'completed']);
+            $userClicked = \auth()->id();
+            $nameJOB = 'stock-export-'.$userClicked;
+
+            SyncJob::where('type', $nameJOB)->update(['status' => 'completed']);
 
             Log::alert('createStockFileShopify Created successfully....!');
 
@@ -251,7 +257,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
         } catch (\Exception $ex) {
             Log::error(' JOB FAILED createStockFileShopify. ' . $ex->getMessage() . $ex->getLine());
-            SyncJob::where('type', 'stock-export')->update(['status' => 'failed']);
+            SyncJob::where('type', 'stock-export-'.$userClicked)->update(['status' => 'failed']);
         }
 
     }

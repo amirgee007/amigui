@@ -22,6 +22,10 @@ class TestController extends Controller
 
         ini_set('memory_limit', '-1');
 
+        $files = Storage::allFiles("public/shopify-images/1");
+        $files2 = Storage::allFiles("public/shopify-images/3");
+
+        dd($files , $files2);
 
         #(new UpdateStockAndShopifyFilesCreateJob(1,1))->handle();
 
