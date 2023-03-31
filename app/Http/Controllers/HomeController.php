@@ -333,7 +333,7 @@ class HomeController extends Controller
         $activeJob = SyncJob::activeStatus($nameJOB)->first();
 
         if (!$activeJob) {
-            $newSyncJob = SyncJob::create(['type' => 'stock-export']);
+            $newSyncJob = SyncJob::create(['type' => $nameJOB]);
             UpdateStockAndShopifyFilesCreateJob::dispatch($newSyncJob->id, $newSyncJob->type , $btnClick , $userClicked);
 
             session()->flash('app_message', 'Your cron job has been scheduled and starting soon please wait.');
