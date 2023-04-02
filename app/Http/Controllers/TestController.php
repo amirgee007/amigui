@@ -22,30 +22,12 @@ class TestController extends Controller
 
         ini_set('memory_limit', '-1');
 
-        $files = Storage::allFiles("public/shopify-images/1");
-        $files2 = Storage::allFiles("public/shopify-images/3");
-
-        dd($files , $files2);
-
-        #(new UpdateStockAndShopifyFilesCreateJob(1,1))->handle();
-
-        $counter = [
-            123,
-            120,
-            11,
-        ];
-
         $user = auth()->user()->name;
-
-
 
         $content = 'Hi, Your Photos Uploaded to Laravel and API is working fine checked at '.now()->toDateTimeString();
 
-        $email = Setting::where('key','adminEmail')->first();
-
-        \Mail::to([[ 'email' => 'amir@infcompany.com' , 'name' => 'Client' ],
-        ])->bcc('amirgee007@yahoo.com')->send(new GlobalEmailAll("Photos Uploaded to Laravel. TESTING EMAIL", $content, $counter , $user));
-
+        \Mail::to([[ 'email' => 'amirgee007@gmail.com' , 'name' => 'Client' ],
+        ])->bcc('amirgee007@yahoo.com')->send(new GlobalEmailAll("Photos Uploaded to Laravel. TESTING EMAIL", $content, [] , $user));
 
         dd('ok email sent');
 
