@@ -196,8 +196,10 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             Storage::deleteDirectory("temp/$userClicked");
 
             $pathStock = "temp/$userClicked/PVP-2.xlsx";
-            $pathShopify = "temp/$userClicked/Shopify-OUTPUT-FILE-Ready-to-Import123.xlsx";
+            $pathShopify = "temp/$userClicked/Shopify-OUTPUT-FILE-Ready-to-Import-V2.xlsx";
             #$pathApiError = 'temp/Api-Error-Logs.xlsx';
+            #$path = storage_path("app/temp/$userId/Shopify-OUTPUT-FILE-Ready-to-Import123.xlsx");
+
 
             Excel::store(new StockFileExport($allDataArrStock), $pathStock);
             Excel::store(new ShopifyImportFileExport($allDataArrSHopify), $pathShopify);
@@ -250,7 +252,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             if($btnClick){
                 \Mail::to([['email' => $email ? $email->value : 'amirgee007@yahoo.com', 'name' => 'Amir'],])
                     ->bcc('amirgee007@yahoo.com')
-                    ->send(new GlobalEmailAll($subject, $content, $counter , $name));
+                    ->send(new GlobalEmailAll($subject, $content, $counter , $user));
             }
 
             Log::emergency(now()->toDateTimeString() . ' Finish updated JOB now for all the things...!New April202');

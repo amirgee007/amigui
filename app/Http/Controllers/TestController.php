@@ -22,7 +22,7 @@ class TestController extends Controller
 
         ini_set('memory_limit', '-1');
 
-        $user = auth()->user()->name;
+        $user = auth()->user();
 
         $content = 'Hi, Your Photos Uploaded to Laravel and API is working fine checked at '.now()->toDateTimeString();
 

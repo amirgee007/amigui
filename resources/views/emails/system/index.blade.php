@@ -5,12 +5,12 @@ Hi, Andres
     {!! $content ?? '' !!}
 @endcomponent
 
-@component('mail::button', ['url' => route('download.stock.excel'), 'color' => 'green'])
-    Download Stock File
+@component('mail::button', ['url' => route('download.stock.excel' , @$user->id), 'color' => 'green'])
+    Download Stock File V2
 @endcomponent
 
-@component('mail::button', ['url' => route('download.shopify.import.excel'), 'color' => 'red'])
-    Download Shopify File
+@component('mail::button', ['url' => route('download.shopify.import.excel' , @$user->id), 'color' => 'red'])
+    Download Shopify File V2
 @endcomponent
 
 {{--$counter $totalProductProcessed, $totalImagesFound, $totalImagesNotFound,--}}
@@ -24,6 +24,6 @@ Hi, Andres
 {{--<a target="_blank" href="{{route('download.erroLogs.excel')}}">HERE</a>--}}
 
 <br>
-User: **{{$user}}** <br>
+User: **{{@$user->name}}** <br>
 URL: **{{env('APP_URL')}}**
 @endcomponent

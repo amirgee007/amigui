@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Console\Commands\UpdateStockAndShopifyFIlesCommand;
-use App\Mail\GlobalEmailAll;
 use App\Models\SyncJob;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;

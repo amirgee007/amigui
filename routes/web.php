@@ -46,12 +46,12 @@ Route::group(['middleware' => 'auth'], function () {
         'uses' => 'HomeController@processImagesIntoExcelFile'
     ]); #ok with new logic
 
-    Route::get('/download-shopify-import-file', [
+    Route::get('/download-shopify-import-file/{user?}', [
         'as' => 'download.shopify.import.excel',
         'uses' => 'HomeController@downloadShopifyOutPutExcelFile'
     ]); #ok with new logic
 
-    Route::get('/download-stock-excel', [
+    Route::get('/download-stock-excel/{user?}', [
         'as' => 'download.stock.excel',
         'uses' => 'HomeController@downloadStockExcelFIle'
     ]); #ok with new logic
