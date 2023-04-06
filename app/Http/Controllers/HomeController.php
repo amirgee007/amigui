@@ -312,7 +312,10 @@ class HomeController extends Controller
 
             $userId = \auth()->id();
 
+            Log::debug($user.'----'.$userId);
+
             $userId = $user ? $user : $userId; #default as ADMIN file needs to download
+
             $path = storage_path("app/temp/$userId/Shopify-OUTPUT-FILE-Ready-to-Import-V2.xlsx");
 
             return response()->download($path);
