@@ -277,7 +277,8 @@ class HomeController extends Controller
         }
     }
 
-    public function downloadStockExcelFIle($user = null){
+    public function downloadStockExcelFIle($user = null)
+    {
         try {
 
             $userId = \auth()->id();

@@ -19,15 +19,14 @@ class TestController extends Controller
     {
         ini_set('max_execution_time', 30000000); //300 seconds = 5 minutes
 
-
         ini_set('memory_limit', '-1');
 
         $user = auth()->user();
 
-        $content = 'Hi, Your Photos Uploaded to Laravel and API is working fine checked at '.now()->toDateTimeString();
+        $content = 'Hi, Your Photos Uploaded to Laravel and API is working v2 April 2023 '.now()->toDateTimeString();
 
         \Mail::to([[ 'email' => 'amirgee007@gmail.com' , 'name' => 'Client' ],
-        ])->bcc('amirgee007@yahoo.com')->send(new GlobalEmailAll("Photos Uploaded to Laravel. TESTING EMAIL", $content, [] , $user));
+        ])->bcc('amirgee007@yahoo.com')->send(new GlobalEmailAll("Photos Uploaded to Laravel. V2", $content, [] , $user));
 
         dd('ok email sent');
 
