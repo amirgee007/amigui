@@ -277,11 +277,12 @@ class HomeController extends Controller
         }
     }
 
-    public function downloadStockExcelFIle($user = 1){
+    public function downloadStockExcelFIle($user = null){
         try {
 
             $userId = \auth()->id();
-            $userId = $userId ? $userId : $user; #default as ADMIN file needs to download
+            $userId = $user ? $user : $userId; #default as ADMIN file needs to download
+
             $path = storage_path("app/temp/$userId/PVP-2.xlsx");
 
             return response()->download($path);
@@ -305,13 +306,13 @@ class HomeController extends Controller
 //
 //    }
 
-    public function downloadShopifyOutPutExcelFile($user = 1){
+    public function downloadShopifyOutPutExcelFile($user = null){
 
         try{
 
             $userId = \auth()->id();
 
-            $userId = $userId ? $userId : $user; #default as ADMIN file needs to download
+            $userId = $user ? $user : $userId; #default as ADMIN file needs to download
             $path = storage_path("app/temp/$userId/Shopify-OUTPUT-FILE-Ready-to-Import-V2.xlsx");
 
             return response()->download($path);
