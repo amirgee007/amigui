@@ -58,7 +58,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 
-
     Route::group(['middleware' => 'admin'], function() {
         Route::resource('users', 'UserController')->names([
             'index' => 'users.index',
@@ -67,6 +66,11 @@ Route::group(['middleware' => 'auth'], function () {
             'edit' => 'users.edit',
             'update' => 'users.update',
             'destroy' => 'users.destroy',
+        ]);
+
+        Route::get('admin-login/{id}', [
+            'as' => 'user.admin.login',
+            'uses' => 'UserController@adminLogin'
         ]);
     });
 });
