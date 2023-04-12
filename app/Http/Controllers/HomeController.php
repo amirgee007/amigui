@@ -29,7 +29,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except(['downloadShopifyOutPutExcelFile' , 'downloadStockExcelFIle']);
     }
 
     public function logout(Request $request) {
