@@ -250,12 +250,12 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             }
 
             if($btnClick){
-                \Mail::to([['email' => $email ? $email->value : 'amirgee007@yahoo.com', 'name' => 'Amir'],])
+                \Mail::to([['email' => $email ? $email->value : 'amirgee007@yahoo.com', 'name' => 'XYZ'],])
                     ->bcc('amirgee007@yahoo.com')
                     ->send(new GlobalEmailAll($subject, $content, $counter , $user));
             }
 
-            Log::emergency(now()->toDateTimeString() . ' Finish updated JOB now for all the things...!New April202');
+            Log::emergency(now()->toDateTimeString() . ' Finish updated JOB now for all the things...!New April_2023');
 
             SyncJob::truncate();
 
