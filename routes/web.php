@@ -25,6 +25,18 @@ Route::post('/save-settings', 'HomeController@saveSettings')->name('save.setting
 Route::get('logout', 'HomeController@logout')->name('logOutCustom');
 
 
+
+Route::get('/download-shopify-import-file/{user?}', [
+    'as' => 'download.shopify.import.excel',
+    'uses' => 'HomeController@downloadShopifyOutPutExcelFile'
+]); #ok with new logic
+
+Route::get('/download-stock-excel/{user?}', [
+    'as' => 'download.stock.excel',
+    'uses' => 'HomeController@downloadStockExcelFIle'
+]); #ok with new logic
+
+
 Route::group(['middleware' => 'auth'], function () {
 
 
@@ -45,18 +57,6 @@ Route::group(['middleware' => 'auth'], function () {
         'as' => 'process.images.files.excel',
         'uses' => 'HomeController@processImagesIntoExcelFile'
     ]); #ok with new logic
-
-    Route::get('/download-shopify-import-file/{user?}', [
-        'as' => 'download.shopify.import.excel',
-        'uses' => 'HomeController@downloadShopifyOutPutExcelFile'
-    ]); #ok with new logic
-
-    Route::get('/download-stock-excel/{user?}', [
-        'as' => 'download.stock.excel',
-        'uses' => 'HomeController@downloadStockExcelFIle'
-    ]); #ok with new logic
-
-
 
     Route::group(['middleware' => 'admin'], function() {
         Route::resource('users', 'UserController')->names([
