@@ -25,8 +25,8 @@ class TestController extends Controller
 
         $content = 'Hi, Your Photos Uploaded to Laravel and API is working v2 April 2023 '.now()->toDateTimeString();
 
-        \Mail::to([[ 'email' => 'amirgeee007@gmail.com' , 'name' => 'Client' ],
-        ])->bcc('amirseersol@gmail.com')->send(new GlobalEmailAll("Photos Uploaded to Laravel. V3", $content, [] , $user));
+        \Mail::to([[ 'email' => 'amirseersol@gmail.com' , 'name' => 'Client' ],
+        ])->bcc('amirgee007@yahoo.com')->send(new GlobalEmailAll("Photos Uploaded to Laravel. V3", $content, [] , $user));
 
         dd('ok email sent');
 
