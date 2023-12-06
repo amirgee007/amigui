@@ -65,6 +65,8 @@ class HomeController extends Controller
             $userId = \auth()->id();
 
             if($v->fails()) {
+                Log::error("images_zip seems like with wrong way data..");
+
                 return back()->withErrors($v);
             }
             else
@@ -75,7 +77,6 @@ class HomeController extends Controller
 
                 $namePathZIP = self::getStorageBackupPath('imagesZip' , '.zip');
                 Storage::put($namePathZIP,file_get_contents($request->file('images_zip')->getRealPath()));
-
 
                 $sku_file = "public/$userId/sku_file.xlsx";
 

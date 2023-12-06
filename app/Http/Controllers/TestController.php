@@ -8,6 +8,7 @@ use App\Mail\GlobalEmailAll;
 use App\Models\ApiErrorLog;
 use App\Models\Setting;
 use App\Services\Shopify\HttpApiRequest;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -18,8 +19,17 @@ class TestController extends Controller
     public function index2()
     {
         ini_set('max_execution_time', 30000000); //300 seconds = 5 minutes
-
         ini_set('memory_limit', '-1');
+
+        collect(Storage::directories('collections/'))
+            ->each(function ($directory) {
+                $directoryDate = \Str::after($directory, '/');
+                if (Carbon::parse($directoryDate)->lte(now()->subDays(50))) {
+                    Storage::deleteDirectory($directory);
+                }
+            });
+
+        dd('dd');
 
         $user = auth()->user();
 
