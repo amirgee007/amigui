@@ -57,6 +57,10 @@ class HomeController extends Controller
             ini_set('max_memory_limit', -1); //300 seconds = 5 minutes
             ini_set('memory_limit', '4096M');
 
+            ini_set('upload_max_size', '1096M');
+            ini_set('post_max_size', '1096M');
+
+
             $v = Validator::make($request->all(), [
                 'images_zip' => 'required|mimes:zip',
                 'sku_file' => 'required|mimes:xlsx',
@@ -66,7 +70,6 @@ class HomeController extends Controller
 
             if($v->fails()) {
                 Log::error("images_zip seems like with wrong way data..");
-
                 return back()->withErrors($v);
             }
             else
@@ -80,7 +83,7 @@ class HomeController extends Controller
 
                 $sku_file = "public/$userId/sku_file.xlsx";
 
-                Log::emergency('renameFilesSku Started and file saved public/sku_file.xlsx');
+                Log::emergency('Amir latest changes renameFilesSku Started and file saved public/sku_file.xlsx jan 2024');
 
                 Storage::put($sku_file, file_get_contents($request->file('sku_file')->getRealPath()));
 
