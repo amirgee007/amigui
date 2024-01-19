@@ -492,7 +492,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
                 $date = Carbon::createFromFormat('M-Y', $month.'-'.$dateFound[1]);
             }
 
-            Log::info($date . ' this date is invalid for the APPLICATION so need to check something');
+            #Log::info($date . ' this date is invalid for the APPLICATION so need to check something');
             return $date;
 
         } catch (\Exception $e) {
