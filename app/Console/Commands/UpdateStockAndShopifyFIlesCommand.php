@@ -160,13 +160,14 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
                 if ($data['count'] > 0 && count($data['results']) > 1) {
                     foreach ($data['results'] as $row) {
+                        $imagesExistArray = [];  // Reset images array for each product
 
                         $totalProductProcessed++;
 
                         $response = $this->getStockFileRow($row);
-
-                        if ($response)
-                            $allDataArrStock[] = $response;
+                        if ($response) {
+                            $allDataArrStock[] = $response;  // Only push fresh data
+                        }
 
                         $matching = ltrim(trim($row['codigo']), '0');
                         $existingProduct = AlreadyExistProduct::where('codigo', 'like', "%$matching%")->count();
@@ -268,7 +269,6 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
     public function getStockFileRow($singleRow)
     {
-
         try {
 
             $taxPercentage = $singleRow['porcentaje_iva'] ? $singleRow['porcentaje_iva'] : 0;
@@ -291,7 +291,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
     {
         try {
 
-            $subCategory = $fatherCategory = $brand = $pCellBrand = $gender = '';
+            $subCategory = $fatherCategory = $brand = $pCellBrand = $gender = $brandForTags = '';  // Ensure all are reset
 
             $taxPercentage = $singleRow['porcentaje_iva'] ? $singleRow['porcentaje_iva'] : 0;
 
@@ -324,7 +324,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
                 $checkLastCharB = substr(trim($pCellBrand), -2, 1);
 
                 if (ctype_space($checkLastCharB)) {
-                    $pCellBrand = substr_replace(trim($pCellBrand), "", -2);
+                    $pCellBrand = substr_replace(trim($brand), "", -2);
                 }
             }
 
@@ -417,6 +417,8 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             $finalTags = str_replace("Sin Marca", "-", $finalTags);
 
             #Log::info($singleRow['codigo']. ' SKU its price NO '.$priceWithTax);
+
+            Log::info("Processing fproduct: {$singleRow['codigo']}, Brand: {$brand}, Category: {$iCellCategory}");
 
             return [
 
