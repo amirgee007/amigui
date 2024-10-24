@@ -69,7 +69,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
     {
 
         $userClicked = \auth()->id();
-        $nameJOB = 'stock-export-'.$userClicked;
+        $nameJOB = 'stock-export-' . $userClicked;
 
         # check if there is product sync job
         $activeJob = SyncJob::activeStatus($nameJOB)->first();
@@ -90,7 +90,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
     }
 
-    public function createStockShopifyOutPutExcelFile($btnClick = 0 , $userClicked = 1)
+    public function createStockShopifyOutPutExcelFile($btnClick = 0, $userClicked = 1)
     {
 
         ini_set('memory_limit', '-1');
@@ -106,8 +106,8 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             $categoryArray = $categoryParents = $brandsArray = [];
 
-            $categoriesResponse = HttpApiRequest::getContificoApi('categoria' , 'v1');
-            $brandsResponse = HttpApiRequest::getContificoApi('marca' , 'v1');
+            $categoriesResponse = HttpApiRequest::getContificoApi('categoria', 'v1');
+            $brandsResponse = HttpApiRequest::getContificoApi('marca', 'v1');
 
             foreach ($categoriesResponse as $category) {
 
@@ -139,14 +139,14 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             $allDataArrStock = $allDataArrSHopify = [];
 
-            Log::info('getContificoApi gets started at this time NOW....!'.now()->toDateTimeString());
+            Log::info('getContificoApi gets started at this time NOW....!' . now()->toDateTimeString());
 
             do {
 
                 #Log::debug($page_count. ' Done createStockShopifyOutPutExcelFile count here api');
                 #$typeWithParams = "producto?result_size=$result_size&result_page=$page_count";
 
-                if($page_count == 1)
+                if ($page_count == 1)
                     $typeWithParams = "producto/?estado=A";
                 else
                     $typeWithParams = "producto/?estado=A&page=$page_count";
@@ -191,7 +191,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             } while ($data['next']);
 
-            Log::info('getContificoApi gets ENDED at this time NOW....!'.now()->toDateTimeString());
+            Log::info('getContificoApi gets ENDED at this time NOW....!' . now()->toDateTimeString());
 
             Storage::deleteDirectory("temp/$userClicked");
 
@@ -209,13 +209,13 @@ class UpdateStockAndShopifyFIlesCommand extends Command
                 'key' => 'last-change',
                 'label' => $userClicked
             ], [
-                'value' => now()->toDateTimeString(),
-                'label' => auth()->id(),
+                    'value' => now()->toDateTimeString(),
+                    'label' => auth()->id(),
                 ]
             );
 
             $userClicked = \auth()->id();
-            $nameJOB = 'stock-export-'.$userClicked;
+            $nameJOB = 'stock-export-' . $userClicked;
 
             SyncJob::where('type', $nameJOB)->update(['status' => 'completed']);
 
@@ -231,7 +231,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             $content = 'Hi, Your Photos Uploaded to Laravel has been processed' . $msg;
 
-            $email = Setting::where('label' ,$userClicked)->where('key', 'adminEmail')->first();
+            $email = Setting::where('label', $userClicked)->where('key', 'adminEmail')->first();
 
             $counter = [
                 $totalProductProcessed,
@@ -244,15 +244,15 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             $name = 'Null';
 
-            if($user){
-                $subject = $subject." By ".strtoupper($user->name);
+            if ($user) {
+                $subject = $subject . " By " . strtoupper($user->name);
                 $name = strtoupper($user->name);
             }
 
-            if($btnClick){
+            if ($btnClick) {
                 \Mail::to([['email' => $email ? $email->value : 'amirseersol@gmail.com', 'name' => 'XYZ'],])
                     ->bcc('amirseersol@gmail.com')
-                    ->send(new GlobalEmailAll($subject, $content, $counter , $user));
+                    ->send(new GlobalEmailAll($subject, $content, $counter, $user));
             }
 
             Log::emergency(now()->toDateTimeString() . ' Finish updated JOB now for all the things...!New March 2024');
@@ -261,7 +261,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
         } catch (\Exception $ex) {
             Log::error(' JOB FAILED createStockFileShopify. ' . $ex->getMessage() . $ex->getLine());
-            SyncJob::where('type', 'stock-export-'.$userClicked)->update(['status' => 'failed']);
+            SyncJob::where('type', 'stock-export-' . $userClicked)->update(['status' => 'failed']);
         }
 
     }
@@ -275,15 +275,11 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             $priceWithTax = $singleRow['pvp1'] + (($taxPercentage / 100) * $singleRow['pvp1']);
 
             return [
-
                 'Handle' => $singleRow['codigo_barra'],
                 'Variant Price' => round($priceWithTax, 2),
                 'Variant Taxable' => false, #not using it
                 'Stock' => $singleRow['cantidad_stock'],
             ];
-
-
-
         } catch (\Exception $ex) {
             Log::error($singleRow['codigo'] . ' codigo single row error.' . $ex->getMessage() . $ex->getLine());
             return null;
@@ -337,7 +333,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             $edadAge = self::isValidDate($singleRow['descripcion']);
 
-            Log::notice($singleRow['descripcion'] . ' its DATE here and ' );
+            Log::notice($singleRow['descripcion'] . ' its DATE here and ');
 
             $edadDatePatternColumn = $edadAge ? (',' . $this->monthsSpanish[$edadAge->format('F')] . '-' . $edadAge->format('y')) : '';
 
@@ -441,7 +437,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
                 'V_Inventory_Tracker' => 'shopify',
                 'V_Inventory_Qty' => $singleRow['cantidad_stock'], #done
                 'V_Inventory_Policy' => 'deny',
-                'V_Price' => number_format( $priceWithTax, 2, ',', '' ),
+                'V_Price' => number_format($priceWithTax, 2, ',', ''),
 //                'V_Price' => round($priceWithTax, 2),
                 'V_Requires_Shipping' => true,
                 'V_Taxable' => true,
@@ -470,7 +466,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
             $date = null;
 
-            $dateFound = explode('-' , $dateInput);
+            $dateFound = explode('-', $dateInput);
 
             $monthsShort = [
                 'Jan' => 'ENE',
@@ -487,9 +483,9 @@ class UpdateStockAndShopifyFIlesCommand extends Command
                 'Dec' => 'DIC',
             ];
 
-            if(isset($dateFound[0]) && in_array($dateFound[0] ,$monthsShort)) {
+            if (isset($dateFound[0]) && in_array($dateFound[0], $monthsShort)) {
                 $month = array_search($dateFound[0], $monthsShort);
-                $date = Carbon::createFromFormat('M-Y', $month.'-'.$dateFound[1]);
+                $date = Carbon::createFromFormat('M-Y', $month . '-' . $dateFound[1]);
             }
 
             #Log::info($date . ' this date is invalid for the APPLICATION so need to check something');
