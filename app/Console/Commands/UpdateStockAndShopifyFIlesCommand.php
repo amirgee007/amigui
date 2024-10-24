@@ -160,6 +160,8 @@ class UpdateStockAndShopifyFIlesCommand extends Command
 
                 if ($data['count'] > 0 && count($data['results']) > 1) {
                     foreach ($data['results'] as $row) {
+
+                        Log::critical(@$row['codigo'] . ' processed in today JOB and make sure its also in the file too.');
                         $imagesExistArray = [];  // Reset images array for each product
 
                         $totalProductProcessed++;
@@ -336,7 +338,7 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             } else {
                 $pCellBrand = '';  // Handle empty or short brand
             }
-            
+
             $brandForTags = $pCellBrand ? (',' . $pCellBrand) : '';
 
             $edadAge = self::isValidDate($singleRow['descripcion']);
