@@ -316,19 +316,27 @@ class UpdateStockAndShopifyFIlesCommand extends Command
             #Also brand bebe chage it to Bebe -》*Bebe*
             $brand = str_replace('bebe', 'Bebe', $brand);
 
-            $checkLastCharB = $brand ? substr(trim($brand), -2, 1) : '';
-
-            if (ctype_space($checkLastCharB)) {
-                $pCellBrand = substr_replace(trim($brand), "", -2);
-
-                $checkLastCharB = substr(trim($pCellBrand), -2, 1);
+            if (!empty($brand) && strlen($brand) > 1) {
+                $checkLastCharB = substr(trim($brand), -2, 1);
 
                 if (ctype_space($checkLastCharB)) {
                     $pCellBrand = substr_replace(trim($brand), "", -2);
+
+                    // Check again after modifying $pCellBrand, only if needed
+                    if (strlen($pCellBrand) > 1) {
+                        $checkLastCharB = substr(trim($pCellBrand), -2, 1);
+
+                        if (ctype_space($checkLastCharB)) {
+                            $pCellBrand = substr_replace(trim($pCellBrand), "", -2);
+                        }
+                    }
+                } else {
+                    $pCellBrand = trim($brand);  // No spaces found, just trim the brand
                 }
+            } else {
+                $pCellBrand = '';  // Handle empty or short brand
             }
-
-
+            
             $brandForTags = $pCellBrand ? (',' . $pCellBrand) : '';
 
             $edadAge = self::isValidDate($singleRow['descripcion']);
